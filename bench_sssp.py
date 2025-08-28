@@ -63,7 +63,7 @@ def get_or_generate_seed(seed: Optional[int] = None) -> int:
     """Generate a random seed if none provided and print it for reproducibility."""
     if seed is None:
         seed = DEFAULT_SEED
-        print(f"Using generated seed: {seed}")
+    print(f"Using generated seed: {seed}")
     return seed
 
 def build_erdos(n: int, p: float, seed: Optional[int], weights: str) -> "nx.DiGraph":
