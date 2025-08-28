@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    name: Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.9', '3.10', '3.11', '3.12']
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Install dependencies for ${{ matrix.python-version }}
+      run: |
+        python -m pip install --upgrade pip
+        pip install networkx pandas scipy
+    
+    - name: Test for ${{ matrix.python-version }}
+      run: |
+        python ./test_sssp.py
+        python bench_sssp.py --graph erdos --n 20000 --p 5e-5 --trials 3 --algos dmsy,dijkstra,bellman_ford --out results.csv
+        python bench_sssp.py --graph grid --rows 200 --cols 200 --weights unit --trials 1 --algos dmsy,dijkstra,bellman_ford --out grid.csv
